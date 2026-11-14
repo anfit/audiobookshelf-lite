@@ -172,6 +172,7 @@ public class MainActivity extends Activity {
         listScreen = new LinearLayout(this);
         listScreen.setOrientation(LinearLayout.VERTICAL);
         listScreen.setPadding(dp(10), dp(10), dp(10), 0);
+        listScreen.setFocusableInTouchMode(true); // keep the search box from grabbing focus (and the keyboard) on launch
 
         EditText search = new EditText(this);
         search.setHint("Search"); search.setHintTextColor(MUTED); search.setTextColor(FG); search.setSingleLine(true);
@@ -296,6 +297,7 @@ public class MainActivity extends Activity {
         root.addView(listScreen, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         root.addView(playerScreen, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(root);
+        listScreen.requestFocus();
     }
 
     private void showPlayer() { listScreen.setVisibility(View.GONE); playerScreen.setVisibility(View.VISIBLE); }

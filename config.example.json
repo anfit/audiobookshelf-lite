@@ -1,0 +1,7 @@
+{
+  "absUrl": "http://192.0.2.10:3333/audiobookshelf",
+  "username": "your-user",
+  "password": "your-password",
+  "port": 3334,
+  "lockTask": true
+}

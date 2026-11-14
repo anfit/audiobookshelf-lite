@@ -1,0 +1,12 @@
+# build output
+native/build/
+*.apk
+*.idsig
+
+# local secrets and signing material
+config.json
+native/debug.keystore
+
+# misc
+node_modules/
+*.log

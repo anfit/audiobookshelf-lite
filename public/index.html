@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1b1b1b">
+<title>ABS Lite</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<section id="home" class="screen">
+  <header class="bar">
+    <select id="libSel" aria-label="Library"></select>
+    <input id="search" type="search" placeholder="Search" aria-label="Search">
+  </header>
+  <div id="content">
+    <h2 id="contH" hidden>Continue listening</h2>
+    <ul id="contList" class="list"></ul>
+    <h2 id="allH">Library</h2>
+    <ul id="allList" class="list"></ul>
+    <button id="more" class="ghost" hidden>Load more</button>
+  </div>
+  <div id="mini" class="mini" hidden>
+    <div id="miniTitle" class="miniTitle"></div>
+    <button id="miniPlay" class="icon">&#9654;</button>
+  </div>
+</section>
+
+<section id="player" class="screen" hidden>
+  <header class="bar"><button id="back" class="ghost">&larr; Back</button><span id="chapTitle" class="grow"></span></header>
+  <img id="cover" alt="" class="cover" hidden src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+  <h2 id="title"></h2>
+  <p id="author" class="muted"></p>
+  <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Position">
+  <div class="times"><span id="cur">0:00</span><span id="left"></span></div>
+  <div class="row">
+    <button id="b30" class="icon">-30</button>
+    <button id="b10" class="icon">-10</button>
+    <button id="play" class="icon big">&#9654;</button>
+    <button id="f10" class="icon">+10</button>
+    <button id="f30" class="icon">+30</button>
+  </div>
+  <div class="row">
+    <button id="prevCh" class="ghost">&laquo; Ch</button>
+    <button id="speed" class="ghost">1x</button>
+    <button id="sleep" class="ghost">Sleep: off</button>
+    <button id="nextCh" class="ghost">Ch &raquo;</button>
+  </div>
+  <select id="chapSel" aria-label="Chapters"></select>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+/* Deliberately plain CSS: no custom properties, no :has(), no color-mix, no dvh, no nesting. Safe for Chrome 41+. */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #1b1b1b; color: #eee; font: 16px/1.4 sans-serif; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+.screen { min-height: 100%; padding: 12px; }
+h1 { text-align: center; margin: 40px 0 20px; }
+h2 { font-size: 16px; margin: 16px 0 8px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; }
+label { display: block; margin: 12px 0; color: #bbb; }
+input, select, button { font: inherit; color: #eee; background: #2c2c2c; border: 1px solid #444; border-radius: 6px; padding: 12px; }
+input[type=text], input[type=password], input[type=search] { width: 100%; display: block; margin-top: 4px; }
+button { min-height: 44px; cursor: pointer; }
+button.primary { width: 100%; background: #3d7a37; border-color: #3d7a37; margin-top: 12px; }
+button.ghost { background: transparent; }
+button.icon { min-width: 56px; padding: 10px; font-size: 18px; }
+button.big { min-width: 84px; font-size: 28px; background: #3d7a37; border-color: #3d7a37; }
+.msg { color: #e57373; min-height: 1.4em; }
+.muted { color: #999; margin: 0; }
+.grow { -webkit-box-flex: 1; flex: 1; }
+.bar { display: -webkit-box; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; }
+.bar select { max-width: 40%; }
+.bar input { -webkit-box-flex: 1; flex: 1; min-width: 0; margin: 0; }
+.list { list-style: none; margin: 0; padding: 0; }
+.list li { display: -webkit-box; display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #2c2c2c; min-height: 64px; }
+.list img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; background: #2c2c2c; flex: none; }
+.list .t { font-weight: bold; }
+.list .meta { -webkit-box-flex: 1; flex: 1; min-width: 0; }
+.list .meta div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prog { height: 3px; background: #333; margin-top: 4px; }
+.prog i { display: block; height: 3px; background: #3d7a37; }
+#content { padding-bottom: 80px; }
+.mini { position: fixed; left: 0; right: 0; bottom: 0; display: -webkit-box; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #262626; border-top: 1px solid #444; }
+.miniTitle { -webkit-box-flex: 1; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cover { display: block; width: 55%; max-width: 280px; max-height: 38vh; object-fit: contain; margin: 8px auto; border-radius: 6px; background: #2c2c2c; }
+#title { margin: 8px 0 0; text-align: center; font-size: 18px; text-transform: none; letter-spacing: 0; color: #eee; }
+#author { text-align: center; }
+#seek { width: 100%; padding: 0; margin: 14px 0 0; background: transparent; border: 0; }
+.times { display: -webkit-box; display: flex; justify-content: space-between; color: #999; font-size: 14px; }
+.row { display: -webkit-box; display: flex; justify-content: space-around; align-items: center; margin: 12px 0; }
+#chapSel { width: 100%; }
+.toast { position: fixed; top: 10px; left: 10px; right: 10px; z-index: 5; padding: 10px; background: #8a2c2c; border-radius: 6px; display: none; }

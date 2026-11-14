@@ -157,7 +157,7 @@ and we trust it will; where it does change, ABS Lite will follow.
 
 ## License
 
-No license has been chosen yet.
+ABS Lite is released under the MIT License; see the `LICENSE` file.
 
 ## Reporting bugs
 

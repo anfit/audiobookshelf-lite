@@ -2,14 +2,17 @@ package lite.abs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -70,7 +73,7 @@ public class MainActivity extends Activity {
     private ScrollView playerScreen;
     private RowAdapter adapter;
     private ImageView miniCover, cover;
-    private TextView miniTitle, title, author, chapTitle, curLbl, leftLbl;
+    private TextView miniTitle, title, author, chapTitle, curLbl, leftLbl, bat;
     private Button miniPlay, playBtn, sleepBtn;
     private SeekBar seek;
     private boolean dragging;
@@ -109,8 +112,30 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    // The battery gauge is part of the system bar, which immersive mode and screen pinning hide, so draw it in the app.
+    private final BroadcastReceiver batteryRx = new BroadcastReceiver() {
+        @Override public void onReceive(Context c, Intent i) { showBattery(i); }
+    };
+
+    private void showBattery(Intent i) {
+        if (i == null) return;
+        int level = i.getIntExtra(BatteryManager.EXTRA_LEVEL, -1), scale = i.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+        int status = i.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean charging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+        int pct = level < 0 || scale <= 0 ? -1 : Math.round(level * 100f / scale);
+        String s = pct < 0 ? "" : pct + "%" + (charging ? " +" : "");
+        int color = pct >= 0 && pct <= 15 && !charging ? 0xFFE57373 : MUTED;
+        if (bat != null) { bat.setText(s); bat.setTextColor(color); bat.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE); }
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        try { unregisterReceiver(batteryRx); } catch (IllegalArgumentException ignored) {}
+    }
+
     @Override protected void onResume() {
         super.onResume();
+        showBattery(registerReceiver(batteryRx, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
         applyImmersive();
         if (Config.LOCK_TASK && !testMode && !lockStarted) {
             try { startLockTask(); lockStarted = true; } catch (Exception ignored) {}
@@ -182,7 +207,9 @@ public class MainActivity extends Activity {
             @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
             @Override public void afterTextChanged(Editable e) { filter = e.toString().trim().toLowerCase(Locale.getDefault()); rebuildRows(); }
         });
-        listScreen.addView(search, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams searchLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        searchLp.setMargins(0, 0, dp(76), 0); // leave the top-right corner to the battery readout
+        listScreen.addView(search, searchLp);
 
         ListView list = new ListView(this);
         adapter = new RowAdapter();
@@ -232,7 +259,9 @@ public class MainActivity extends Activity {
         chapTitle.setSingleLine(true);
         chapTitle.setPadding(dp(12), 0, 0, 0);
         top.addView(chapTitle, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        p.addView(top, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams topLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        topLp.setMargins(0, 0, dp(76), 0); // room for the battery readout
+        p.addView(top, topLp);
 
         int side = Math.min(getResources().getDisplayMetrics().widthPixels * 6 / 10, getResources().getDisplayMetrics().heightPixels * 4 / 10);
         cover = new ImageView(this);
@@ -296,6 +325,12 @@ public class MainActivity extends Activity {
         playerScreen.addView(p, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(listScreen, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         root.addView(playerScreen, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        bat = text("", 14, MUTED, true);
+        bat.setBackgroundColor(0xCC1B1B1B);
+        bat.setPadding(dp(8), dp(4), dp(8), dp(4));
+        FrameLayout.LayoutParams batLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.RIGHT);
+        batLp.setMargins(0, dp(14), dp(10), 0);
+        root.addView(bat, batLp); // last child: stays on top of both screens, like a status bar
         setContentView(root);
         listScreen.requestFocus();
     }

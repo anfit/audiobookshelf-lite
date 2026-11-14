@@ -4,12 +4,13 @@ $ErrorActionPreference = 'Stop'
 $here  = Split-Path -Parent $MyInvocation.MyCommand.Path
 $root  = Split-Path -Parent $here
 $sdk   = Join-Path (Split-Path -Parent $root) 'android-sdk'
-$bt    = Join-Path $sdk 'bt-unpack\android-14'
-$jar   = Join-Path $sdk 'plat-unpack\android-5.1.1\android.jar'
+# Override with ABS_BUILD_TOOLS (folder with aapt2, d8, zipalign, apksigner) and ABS_ANDROID_JAR (android.jar of API 21+).
+$bt    = if ($env:ABS_BUILD_TOOLS) { $env:ABS_BUILD_TOOLS } else { Join-Path $sdk 'bt-unpack\android-14' }
+$jar   = if ($env:ABS_ANDROID_JAR) { $env:ABS_ANDROID_JAR } else { Join-Path $sdk 'plat-unpack\android-5.1.1\android.jar' }
 $out   = Join-Path $here 'build'
 $cfg   = Get-Content (Join-Path $root 'config.json') -Raw | ConvertFrom-Json
 
-foreach ($p in @($bt, $jar)) { if (-not (Test-Path $p)) { throw "Missing $p" } }
+foreach ($p in @($bt, $jar)) { if (-not (Test-Path $p)) { throw "Missing $p (set ABS_BUILD_TOOLS / ABS_ANDROID_JAR)" } }
 if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 New-Item -ItemType Directory -Force "$out\classes", "$out\gen\lite\abs", "$out\dex" | Out-Null
 

@@ -12,6 +12,7 @@
 
     <application
         android:label="ABS Lite"
+        android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:theme="@android:style/Theme.Holo.NoActionBar">
 

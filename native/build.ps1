@@ -28,7 +28,9 @@ final class Config {
 "@
 [System.IO.File]::WriteAllText("$out\gen\lite\abs\Config.java", $configJava, (New-Object System.Text.UTF8Encoding($false)))
 
-& "$bt\aapt2.exe" link -o "$out\base.apk" -I $jar --manifest "$here\AndroidManifest.xml" --min-sdk-version 21 --target-sdk-version 22 --version-code 1 --version-name 1.0
+& "$bt\aapt2.exe" compile --dir "$here\res" -o "$out\res.zip"
+if ($LASTEXITCODE) { throw 'aapt2 compile failed' }
+& "$bt\aapt2.exe" link -o "$out\base.apk" -I $jar --manifest "$here\AndroidManifest.xml" -R "$out\res.zip" --min-sdk-version 21 --target-sdk-version 22 --version-code 1 --version-name 1.0
 if ($LASTEXITCODE) { throw 'aapt2 link failed' }
 
 $srcs = @(Get-ChildItem "$here\src" -Recurse -Filter *.java | ForEach-Object FullName) + "$out\gen\lite\abs\Config.java"
